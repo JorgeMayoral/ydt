@@ -8,4 +8,5 @@ name = "ybt"
 path = "src/main.rs"
 
 [dependencies]
+clap = { version = "4.5.7", features = ["derive"] }
 cliclack = "0.3.1"
