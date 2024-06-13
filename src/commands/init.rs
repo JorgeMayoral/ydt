@@ -1,4 +1,4 @@
-use crate::project::{Feature, Language, Project};
+use crate::project::{Language, Project};
 
 pub fn init() -> Project {
     cliclack::intro("Yorch's Development Toolbox").expect("Failed to print intro");
@@ -23,8 +23,8 @@ pub fn init() -> Project {
         .expect("Failed to get language");
 
     let features = cliclack::multiselect("Select additional features:")
-        .item(Feature::Git, "Git", "")
-        .initial_values(vec![Feature::Git])
+        .items(&language.available_features())
+        .initial_values(language.default_features())
         .required(false)
         .interact()
         .expect("Failed to get additional features");
