@@ -1,0 +1,11 @@
+[package]
+name = "yorchs-binary-toolbox"
+version = "0.1.0"
+edition = "2021"
+
+[[bin]]
+name = "ybt"
+path = "src/main.rs"
+
+[dependencies]
+cliclack = "0.3.1"
