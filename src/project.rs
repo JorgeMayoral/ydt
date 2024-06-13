@@ -1,3 +1,5 @@
+use crate::files::nix::NixFlake;
+
 #[derive(Clone, PartialEq, Eq, Debug)]
 pub enum Language {
     Rust,
@@ -7,11 +9,11 @@ pub enum Language {
 }
 
 impl Language {
-    pub fn nix_packages(&self) -> Vec<&str> {
+    pub fn nix_packages(&self) -> Vec<String> {
         match self {
-            Self::Rust => vec!["rustc", "cargo"],
-            Self::Go => vec!["go"],
-            Self::Nodejs => vec!["nodejs"],
+            Self::Rust => vec!["rustc".to_owned(), "cargo".to_owned()],
+            Self::Go => vec!["go".to_owned()],
+            Self::Nodejs => vec!["nodejs".to_owned()],
             Self::None => vec![],
         }
     }
@@ -63,5 +65,30 @@ impl Project {
             language,
             features,
         }
+    }
+
+    pub fn handle_features(&self) {
+        for feature in &self.features {
+            match feature {
+                Feature::Git => {
+                    println!("Handling Git feature");
+                }
+                Feature::Nix => {
+                    println!("Handling Nix feature");
+                    let nix_packages = &self.language.nix_packages().clone();
+                    let nix_flake = NixFlake::new(nix_packages.to_owned());
+                    let flake_content = nix_flake.create();
+                    Self::write_file("./flake.nix".to_string(), flake_content);
+                }
+            }
+        }
+    }
+
+    fn write_file(path: String, content: String) {
+        std::fs::write(path, content).expect("Failed to write file");
+    }
+
+    pub fn features(&self) -> &[Feature] {
+        &self.features
     }
 }
