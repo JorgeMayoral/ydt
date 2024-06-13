@@ -18,10 +18,10 @@ impl Language {
 
     pub fn available_features(&self) -> Vec<FeaturePromptItem> {
         match self {
-            Self::Rust => vec![Feature::Git.to_prompt_item()],
-            Self::Go => vec![Feature::Git.to_prompt_item()],
-            Self::Nodejs => vec![Feature::Git.to_prompt_item()],
-            Self::None => vec![Feature::Git.to_prompt_item()],
+            Self::Rust => vec![Feature::Git.to_prompt_item(), Feature::Nix.to_prompt_item()],
+            Self::Go => vec![Feature::Git.to_prompt_item(), Feature::Nix.to_prompt_item()],
+            Self::Nodejs => vec![Feature::Git.to_prompt_item(), Feature::Nix.to_prompt_item()],
+            Self::None => vec![Feature::Git.to_prompt_item(), Feature::Nix.to_prompt_item()],
         }
     }
 
@@ -37,12 +37,14 @@ type FeaturePromptItem<'a> = (Feature, &'a str, &'a str);
 #[derive(Clone, PartialEq, Eq, Debug)]
 pub enum Feature {
     Git,
+    Nix,
 }
 
 impl Feature {
     pub fn to_prompt_item(&self) -> (Self, &str, &str) {
         match self {
             Self::Git => (Self::Git, "Git", ""),
+            Self::Nix => (Self::Nix, "Nix", ""),
         }
     }
 }
