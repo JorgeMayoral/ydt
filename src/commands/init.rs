@@ -1,6 +1,9 @@
-use crate::project::{Language, Project};
+use crate::{
+    language::Language,
+    project::{create_dev_project, features_prompt, DevProject, Project},
+};
 
-pub fn init() -> Project {
+pub fn init() {
     cliclack::intro("Yorch's Development Toolbox").expect("Failed to print intro");
     let name: String = cliclack::input("Enter project name:")
         .placeholder("my-project")
@@ -17,19 +20,17 @@ pub fn init() -> Project {
     let language = cliclack::select("Select a language:")
         .item(Language::Rust, "Rust", "")
         .item(Language::Go, "Go", "")
-        .item(Language::Nodejs, "Node.js", "")
         .item(Language::None, "None", "Empty project")
         .interact()
         .expect("Failed to get language");
 
-    let features = cliclack::multiselect("Select additional features:")
-        .items(&language.available_features())
-        .initial_values(language.default_features())
-        .required(false)
-        .interact()
-        .expect("Failed to get additional features");
+    let features = features_prompt(&language);
+    let project = create_dev_project(name, language, features);
+    match project {
+        Project::Rust(p) => p.create_project(),
+        Project::Go(p) => p.create_project(),
+        Project::Empty(p) => p.create_project(),
+    }
 
     cliclack::outro("Project created successfully!").expect("Failed to print outro");
-
-    Project::new(name, language, features)
 }

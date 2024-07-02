@@ -12,10 +12,9 @@ impl NixFlake {
     }
 
     pub fn create(&self) -> String {
-        let mut hb = Handlebars::new();
-        hb.register_template_file("flake", "templates/flake.nix")
-            .expect("Failed to register template file");
-        hb.render("flake", &self)
+        let hb = Handlebars::new();
+        let template = include_str!("../../templates/flake.nix");
+        hb.render_template(&template, &self)
             .expect("Failed to render template")
     }
 }

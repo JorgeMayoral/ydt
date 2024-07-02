@@ -1,7 +1,9 @@
 use clap::{Parser, Subcommand};
 
 mod commands;
+mod feature;
 mod files;
+mod language;
 mod project;
 
 #[derive(Parser)]
@@ -20,8 +22,7 @@ fn main() {
     let cli = Cli::parse();
     match cli.command {
         Commands::Init => {
-            let project = commands::init();
-            project.handle_features();
+            commands::init();
         }
     }
 }
